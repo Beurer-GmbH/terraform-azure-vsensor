@@ -1,5 +1,5 @@
 resource "azurerm_network_security_group" "vsensors_vmss_nsg" {
-  count               = local.subnet_enable ? 1 : 0
+  count               = local.nsg_enable ? 1 : 0
   name                = "${local.deployment_id}-nsg"
   location            = local.location
   resource_group_name = local.rg.name
@@ -146,7 +146,7 @@ resource "azurerm_network_security_group" "vsensors_vmss_nsg" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "vsensors_vmss_nsg_asoc" {
-  count                     = local.subnet_enable ? 1 : 0
+  count                     = local.nsg_enable ? 1 : 0
   subnet_id                 = local.subnet.id
   network_security_group_id = azurerm_network_security_group.vsensors_vmss_nsg[0].id
 }
