@@ -261,6 +261,7 @@ module "vsensors" {
 }
 ```
 
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -268,6 +269,12 @@ module "vsensors" {
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.85 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.5 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 3.85 |
 
 ## Modules
 
@@ -318,7 +325,6 @@ No modules.
 | [azurerm_virtual_machine_scale_set_extension.azure_monitor_extension](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_scale_set_extension) | resource |
 | [azurerm_virtual_machine_scale_set_extension.vsensor_install](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_scale_set_extension) | resource |
 | [azurerm_virtual_network.vnet_new](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) | resource |
-| [random_uuid.pcap_uuid](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/uuid) | resource |
 | [azurerm_resource_group.rg_existing](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/resource_group) | data source |
 | [azurerm_resource_group.vnet_rg_existing](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/resource_group) | data source |
 | [azurerm_route_table.vsensor_existing_route_table](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/route_table) | data source |
@@ -341,9 +347,10 @@ No modules.
 | <a name="input_max_size"></a> [max\_size](#input\_max\_size) | The maximum number of vSensors to be deployed by auto-scaling during high traffic. | `number` | `5` | no |
 | <a name="input_min_size"></a> [min\_size](#input\_min\_size) | The minimum number of vSensors to auto-scale down to. | `number` | `2` | no |
 | <a name="input_nat_gw_enable"></a> [nat\_gw\_enable](#input\_nat\_gw\_enable) | Deploy a NAT Gateway in the Virtual Network. If using an existing VNet and are using other firewall configurations, false may be required. | `bool` | `true` | no |
+| <a name="input_nsg_enable"></a> [nsg\_enable](#input\_nsg\_enable) | Deploy a Network Security Group to control inbound and outbound traffic to the vSensors. | `bool` | `true` | no |
 | <a name="input_os_sensor_hmac_token"></a> [os\_sensor\_hmac\_token](#input\_os\_sensor\_hmac\_token) | The hash-based message authentication code (HMAC) token to authenticate osSensors with vSensor. | `string` | n/a | yes |
 | <a name="input_private_link_enable"></a> [private\_link\_enable](#input\_private\_link\_enable) | If `true` will create a private link service to attach osSensors from other networks. | `bool` | `false` | no |
-| <a name="input_push_token"></a> [push\_token](#input\_push\_token) | Push token to authenticate with the appliance. Should be generated on the Darktrace master instance."<br>  For more information, see the Darktrace Customer Portal (https://customerportal.darktrace.com/login)." | `string` | n/a | yes |
+| <a name="input_push_token"></a> [push\_token](#input\_push\_token) | Push token to authenticate with the appliance. Should be generated on the Darktrace master instance."<br/>  For more information, see the Darktrace Customer Portal (https://customerportal.darktrace.com/login)." | `string` | n/a | yes |
 | <a name="input_rg_name"></a> [rg\_name](#input\_rg\_name) | Name of an existing resource group to deploy the quickstart into. Leave blank to let the quickstart create one. | `string` | `""` | no |
 | <a name="input_route_table_name"></a> [route\_table\_name](#input\_route\_table\_name) | If not deploying a NAT Gateway, you may need to provide an existing route table to attach to the new deployed vSensor subnet to allow internet routing. | `string` | `""` | no |
 | <a name="input_route_table_rg"></a> [route\_table\_rg](#input\_route\_table\_rg) | The Resource Group the existing Route Table (if provided) is deployed in. Default is same resource group as the VNet. | `string` | `""` | no |
@@ -384,3 +391,4 @@ No modules.
 | <a name="output_vnet_name"></a> [vnet\_name](#output\_vnet\_name) | Name of the deployment Virtual Network either created by or passed into this module. |
 | <a name="output_vnet_vsensor_subnet_id"></a> [vnet\_vsensor\_subnet\_id](#output\_vnet\_vsensor\_subnet\_id) | Resource ID of the deployment vSensor Subnet either created by or passed into this module. |
 | <a name="output_vnet_vsensor_subnet_name"></a> [vnet\_vsensor\_subnet\_name](#output\_vnet\_vsensor\_subnet\_name) | Name of the deployment vSensor Subnet either created by or passed into this module. |
+<!-- END_TF_DOCS -->

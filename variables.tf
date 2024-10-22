@@ -70,6 +70,12 @@ variable "subnet_cidr" {
 
 }
 
+variable "nsg_enable" {
+  type        = bool
+  description = "Deploy a Network Security Group to control inbound and outbound traffic to the vSensors."
+  default     = true
+}
+
 variable "nat_gw_enable" {
   type        = bool
   description = "Deploy a NAT Gateway in the Virtual Network. If using an existing VNet and are using other firewall configurations, false may be required."
