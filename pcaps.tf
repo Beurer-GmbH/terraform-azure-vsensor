@@ -1,8 +1,3 @@
-# Used in locals.tf to rename storage account UUID since you can't
-# recreate a new storage account with the same name as an old one.
-resource "random_uuid" "pcap_uuid" {
-}
-
 # Ignore network_rules being missing causing critical, it is separate below
 # It needs to be separate due to a cycle with virtual_network_subnet_ids
 # kics-scan ignore-block
@@ -68,11 +63,11 @@ resource "azurerm_storage_management_policy" "pcaps_storage_policy" {
 resource "azurerm_subnet_service_endpoint_storage_policy" "pcaps_service_endpoint_policy" {
   count = local.pcaps_storage_enable ? 1 : 0
 
-  name                = "${local.pcaps_name}-service-endpoint"
+  name                = "${local.pcaps_name}-se"
   location            = local.location
   resource_group_name = local.rg.name
   definition {
-    name              = "${local.pcaps_name}-service-endpoint-definition"
+    name              = "${local.pcaps_name}-se-definition"
     service           = "Microsoft.Storage"
     service_resources = [azurerm_storage_account.pcaps_storage_account[0].id]
   }
@@ -86,7 +81,6 @@ resource "azurerm_role_assignment" "pcaps_role_blob_contrib" {
   scope                = "${data.azurerm_subscription.subscription.id}/resourceGroups/${local.rg.name}/providers/Microsoft.Storage/storageAccounts/${local.pcaps_sa_name}"
   role_definition_name = "Storage Blob Data Contributor"
   principal_id         = azurerm_linux_virtual_machine_scale_set.vsensor_vmss.identity[0].principal_id
-
 }
 
 resource "azurerm_role_assignment" "pcaps_role_storage_contrib" {
@@ -95,5 +89,4 @@ resource "azurerm_role_assignment" "pcaps_role_storage_contrib" {
   scope                = "${data.azurerm_subscription.subscription.id}/resourceGroups/${local.rg.name}/providers/Microsoft.Storage/storageAccounts/${local.pcaps_sa_name}"
   role_definition_name = "Storage Account Contributor"
   principal_id         = azurerm_linux_virtual_machine_scale_set.vsensor_vmss.identity[0].principal_id
-
 }

@@ -9,14 +9,14 @@ locals {
   # If we are generating a new VNet, we must be generating a new subnet. Otherwise, we may be using or generating a new subnet.
   subnet_enable = local.vnet_enable ? true : length(var.subnet_name) == 0
   subnet        = local.subnet_enable ? azurerm_subnet.vsensor_subnet[0] : data.azurerm_subnet.vsensor_subnet_existing[0]
-  vmss_name     = "${local.deployment_id}-vsensor-vmss"
+  vmss_name     = "${local.deployment_id}-vmss"
   rg_enable     = length(var.rg_name) == 0
   rg            = local.rg_enable ? azurerm_resource_group.rg[0] : data.azurerm_resource_group.rg_existing[0]
   rg_name       = local.rg_enable ? "${local.deployment_id}-rg" : var.rg_name
   # If user provides a location, use that. If not, use the location of the resource group provided.
   location = length(var.location) > 0 ? var.location : (local.rg.location)
 
-  lb_name                = "${local.deployment_id}-loadbalancer"
+  lb_name                = "${local.deployment_id}-lbi"
   lb_frontend_name       = "${local.lb_name}-frontend"
   lb_frontend_proxy_name = "${local.lb_name}-frontend-proxy"
   lb_direct_enable       = var.private_link_enable ? 0 : 1
@@ -35,10 +35,12 @@ locals {
 
   pcaps_storage_enable = var.lifecycle_pcaps_blob_days > 0
   pcaps_name           = lower("${local.deployment_id}-pcaps")
-  # Storage Account must be lowercase letters and numbers only.
-  pcaps_sa_name = lower(join("", [substr(local.deployment_id, 0, 15), substr(random_uuid.pcap_uuid.result, 0, 4), "pcaps"]))
+  # Storage Account must be lowercase letters and numbers only and must be < 25 characters.
+  # Trim prefix to 11 characters to ensure we don't exceed the 24 character limit.
+  # Skip CAF resource abbreviation "st" due to the strict character limit.
+  pcaps_sa_name = replace(lower(join("-", [substr(local.deployment_id, 0, 19), "pcaps"])), "-", "")
 
-  data_collection_name = "${local.deployment_id}-datacollect"
+  data_collection_name = "${local.deployment_id}-dcr"
 
   common_tags = {
     deployment_id = local.deployment_id
