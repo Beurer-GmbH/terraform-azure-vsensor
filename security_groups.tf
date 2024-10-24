@@ -5,7 +5,7 @@ resource "azurerm_network_security_group" "vsensors_vmss_nsg" {
   resource_group_name = local.rg.name
 
   security_rule {
-    name                       = "AllowMgmtInPorts22"
+    name                       = "AllowMgmtSSH"
     description                = "Allow Inbound traffic to TCP ports 22 from customer selected IPs/Ranges."
     priority                   = 1000
     direction                  = "Inbound"
@@ -13,7 +13,7 @@ resource "azurerm_network_security_group" "vsensors_vmss_nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22"
-    source_address_prefix      = local.subnet.address_prefixes[0]
+    source_address_prefixes    = local.subnet_enable ? concat(var.ssh_cidrs, local.subnet.address_prefixes) : var.ssh_cidrs
     destination_address_prefix = "*"
   }
   security_rule {
